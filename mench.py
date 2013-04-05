@@ -11,8 +11,6 @@ class Piece:
         self.pic = pic1
     def moving(self,n):
         pass
-    def display(self):
-        pass
 #//////////////////////////////////////
 white = [255,255,255]
 black = [0,0,0]
@@ -193,6 +191,7 @@ screen = pygame.display.set_mode(size)
 loop = True
 font = pygame.font.Font("calibri.ttf",60)
 num_of_players = 0
+dice = 0
 pieces = []
 while loop:
     for event in pygame.event.get():
@@ -222,9 +221,61 @@ while loop:
             loop = False
     pygame.display.flip()
 #//////////////////////////////////////
-
+for i in range(4):
+    img = pygame.image.load("red.png")
+    img = pygame.transform.scale(img,(25,25))
+    pieces.append(Piece(red,56+i,img))
+for i in range(4):
+    img = pygame.image.load("green.png")
+    img = pygame.transform.scale(img,(25,25))
+    pieces.append(Piece(green,64+i,img))
+if num_of_players > 2:
+    for i in range(4):
+        img = pygame.image.load("blue.png")
+        img = pygame.transform.scale(img,(25,25))
+        pieces.append(Piece(green,68+i,img))
+if num_of_players > 3:
+    for i in range(4):
+        img = pygame.image.load("yellow.png")
+        img = pygame.transform.scale(img,(25,25))
+        pieces.append(Piece(green,60+i,img))
+myfield = Field()
 #//////////////////////////////////////
 def gameover():
-    pass
+    if myfield.field[40] == red and myfield.field[41] == red and myfield.field[42] == red and myfield.field[43] == red:
+        screen.fill(white)
+        wfont = pygame.font.Font("calibri.ttf",70)
+        wtxt = wfont.render("Red wins!!",True,red)
+        screen.blit(wtxt,[400,250])
+        pygame.display.flip()
+        pygame.time.delay(6000)
+        return True
+    if myfield.field[44] == yellow and myfield.field[45] == yellow and myfield.field[46] == yellow and myfield.field[47] == yellow:
+        screen.fill(white)
+        wfont = pygame.font.Font("calibri.ttf",70)
+        wtxt = wfont.render("Yellow wins!!",True,yellow)
+        screen.blit(wtxt,[400,250])
+        pygame.display.flip()
+        pygame.time.delay(6000)
+        return True
+    if myfield.field[48] == green and myfield.field[49] == green and myfield.field[50] == green and myfield.field[51] == green:
+        screen.fill(white)
+        wfont = pygame.font.Font("calibri.ttf",70)
+        wtxt = wfont.render("Green wins!!",True,green)
+        screen.blit(wtxt,[400,250])
+        pygame.display.flip()
+        pygame.time.delay(6000)
+        return True
+    if myfield.field[52] == blue and myfield.field[53] == blue and myfield.field[54] == blue and myfield.field[55] == blue:
+        screen.fill(white)
+        wfont = pygame.font.Font("calibri.ttf",70)
+        wtxt = wfont.render("Blue wins!!",True,blue)
+        screen.blit(wtxt,[400,250])
+        pygame.display.flip()
+        pygame.time.delay(6000)
+        return True
+    return False
+#//////////////////////////////////////
+
 #//////////////////////////////////////
 pygame.quit()
