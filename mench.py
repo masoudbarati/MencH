@@ -10,7 +10,94 @@ class Piece:
         self.pos = pos1
         self.pic = pic1
     def moving(self,n):
-        pass
+        global dice
+        if self.color == red:
+            if self.pos > 55 and self.pos < 60 and dice == 6:
+                if myfield.field[0] != red:
+                    self.pos = 0
+                    dice = 0
+                    myfield.field[0] = red
+            elif self.pos + n < 44 and myfield.field[self.pos + n] != red:
+                self.pos += n
+                dice = 0
+                myfield.field[self.pos] = red
+        if self.color == yellow:
+            if self.pos > 59 and self.pos < 64 and dice == 6:
+                if myfield.field[10] != yellow:
+                    self.pos = 10
+                    dice = 0
+                    myfield[10] = yellow
+            elif self.pos + n > 39:
+                testdice = (dice - (39-self.pos)) - 1
+                if myfield.field[testdice] != yellow:
+                    self.pos = testdice
+                    dice = 0
+                    myfield.field[testdice] = yellow
+            elif self.pos + n > 9:
+                testdice = (dice - (39-self.pos)) - 1
+                if myfield.field[testdice + 43] != yellow:
+                    self.pos = testdice + 43
+                    dice = 0
+                    myfield.field[testdice + 43] = yellow
+            else:
+                if myfield.field[self.pos + n] != yellow:
+                    self.pos += n
+                    dice = 0
+                    myfield.field[self.pos] = yellow
+        if self.color == green:
+            if self.pos > 63 and self.pos < 68 and dice == 6:
+                if myfield.field[20] != green:
+                    self.pos = 20
+                    dice = 0
+                    myfield[20] = green
+            elif self.pos + n > 39:
+                testdice = (dice - (39-self.pos)) - 1
+                if myfield.field[testdice] != green:
+                    self.pos = testdice
+                    dice = 0
+                    myfield.field[testdice] = green
+            elif self.pos + n > 19:
+                testdice = (dice - (39-self.pos)) - 1
+                if myfield.field[testdice + 43] != green:
+                    self.pos = testdice + 43
+                    dice = 0
+                    myfield.field[testdice + 43] = green
+            else:
+                if myfield.field[self.pos + n] != green:
+                    self.pos += n
+                    dice = 0
+                    myfield.field[self.pos] = green
+        if self.color == blue:
+            if self.pos > 67 and dice == 6:
+                if myfield.field[30] != blue:
+                    self.pos = 30
+                    dice = 0
+                    myfield[30] = blue
+            elif self.pos + n > 39:
+                testdice = (dice - (39-self.pos)) - 1
+                if myfield.field[testdice] != blue:
+                    self.pos = testdice
+                    dice = 0
+                    myfield.field[testdice] = blue
+            elif self.pos + n > 29:
+                testdice = (dice - (39-self.pos)) - 1
+                if myfield.field[testdice + 43] != blue:
+                    self.pos = testdice + 43
+                    dice = 0
+                    myfield.field[testdice + 43] = blue
+            else:
+                if myfield.field[self.pos + n] != blue:
+                    self.pos += n
+                    dice = 0
+                    myfield.field[self.pos] = blue
+        #zadan
+        for i in pieces:
+            if self.pos == i.pos and self.color != i.color:
+                hit(i)
+#//////////////////////////////////////
+def hit(hitted):
+    if hitted.color == red:
+        for i in range(##
 #//////////////////////////////////////
 white = [255,255,255]
 black = [0,0,0]
