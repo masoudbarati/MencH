@@ -11,6 +11,7 @@ class Piece:
         self.pic = pic1
     def moving(self,n):
         global dice
+        former_pos = self.pos
         if self.color == red:
             if self.pos > 55 and self.pos < 60 and dice == 6:
                 if myfield.field[0] != red:
@@ -22,20 +23,20 @@ class Piece:
                 dice = 0
                 myfield.field[self.pos] = red
         if self.color == yellow:
-            if self.pos > 59 and self.pos < 64 and dice == 6:
-                if myfield.field[10] != yellow:
+            if self.pos > 59 and self.pos < 64:
+                if dice == 6 and myfield.field[10] != yellow:
                     self.pos = 10
                     dice = 0
-                    myfield[10] = yellow
+                    myfield.field[10] = yellow
             elif self.pos + n > 39:
                 testdice = (dice - (39-self.pos)) - 1
                 if myfield.field[testdice] != yellow:
                     self.pos = testdice
                     dice = 0
                     myfield.field[testdice] = yellow
-            elif self.pos + n > 9:
-                testdice = (dice - (39-self.pos)) - 1
-                if myfield.field[testdice + 43] != yellow:
+            elif self.pos < 10 and self.pos + n > 9:
+                testdice = (dice - (9-self.pos))
+                if myfield.field[testdice + 43] != yellow and (testdice + 43) < 48:
                     self.pos = testdice + 43
                     dice = 0
                     myfield.field[testdice + 43] = yellow
@@ -45,59 +46,83 @@ class Piece:
                     dice = 0
                     myfield.field[self.pos] = yellow
         if self.color == green:
-            if self.pos > 63 and self.pos < 68 and dice == 6:
-                if myfield.field[20] != green:
+            if self.pos > 63 and self.pos < 68:
+                if dice == 6 and myfield.field[20] != green:
                     self.pos = 20
                     dice = 0
-                    myfield[20] = green
+                    myfield.field[20] = green
             elif self.pos + n > 39:
                 testdice = (dice - (39-self.pos)) - 1
                 if myfield.field[testdice] != green:
                     self.pos = testdice
                     dice = 0
                     myfield.field[testdice] = green
-            elif self.pos + n > 19:
-                testdice = (dice - (39-self.pos)) - 1
-                if myfield.field[testdice + 43] != green:
-                    self.pos = testdice + 43
+            elif self.pos < 20 and self.pos + n > 19:
+                testdice = (dice - (19-self.pos))
+                if myfield.field[testdice + 47] != green and (testdice + 47) < 52:
+                    self.pos = testdice + 47
                     dice = 0
-                    myfield.field[testdice + 43] = green
+                    myfield.field[testdice + 47] = green
             else:
                 if myfield.field[self.pos + n] != green:
                     self.pos += n
                     dice = 0
                     myfield.field[self.pos] = green
         if self.color == blue:
-            if self.pos > 67 and dice == 6:
-                if myfield.field[30] != blue:
+            if self.pos > 67:
+                if dice == 6 and myfield.field[30] != blue:
                     self.pos = 30
                     dice = 0
-                    myfield[30] = blue
+                    myfield.field[30] = blue
             elif self.pos + n > 39:
                 testdice = (dice - (39-self.pos)) - 1
                 if myfield.field[testdice] != blue:
                     self.pos = testdice
                     dice = 0
                     myfield.field[testdice] = blue
-            elif self.pos + n > 29:
-                testdice = (dice - (39-self.pos)) - 1
-                if myfield.field[testdice + 43] != blue:
-                    self.pos = testdice + 43
+            elif self.pos < 30 and self.pos + n > 29:
+                testdice = (dice - (29-self.pos))
+                if myfield.field[testdice + 51] != blue and (testdice + 51) < 56:
+                    self.pos = testdice + 51
                     dice = 0
-                    myfield.field[testdice + 43] = blue
+                    myfield.field[testdice + 51] = blue
             else:
                 if myfield.field[self.pos + n] != blue:
                     self.pos += n
                     dice = 0
                     myfield.field[self.pos] = blue
-        #zadan
-        for i in pieces:
-            if self.pos == i.pos and self.color != i.color:
+        if former_pos != self.pos:
+            myfield.field[former_pos] = black
+        #hitting
+        for i in range(len(pieces)):
+            if self.pos == pieces[i].pos and self.color != pieces[i].color:
                 hit(i)
 #//////////////////////////////////////
-def hit(hitted):
-    if hitted.color == red:
-        for i in range(##
+def hit(hitted_num):
+    if pieces[hitted_num].color == red:
+        for i in range(56,60):
+            if myfield.field[i] == black:
+                pieces[hitted_num].pos = i
+                myfield.field[i] = red
+                break
+    if pieces[hitted_num].color == yellow:
+        for i in range(60,64):
+            if myfield.field[i] == black:
+                pieces[hitted_num].pos = i
+                myfield.field[i] = yellow
+                break
+    if pieces[hitted_num].color == green:
+        for i in range(64,68):
+            if myfield.field[i] == black:
+                pieces[hitted_num].pos = i
+                myfield.field[i] = green
+                break
+    if pieces[hitted_num].color == blue:
+        for i in range(68,72):
+            if myfield.field[i] == black:
+                pieces[hitted_num].pos = i
+                myfield.field[i] = blue
+                break
 #//////////////////////////////////////
 white = [255,255,255]
 black = [0,0,0]
@@ -267,11 +292,21 @@ class Field:
             self.field.append(blue)
     def display(self):
         for i in range(40):
-            pygame.draw.circle(screen,self.field[i],get_gos(i),25,4)
+            pygame.draw.circle(screen,self.field[i],get_pos(i),25,4)
         for i in range(40,56):
             pygame.draw.circle(screen,self.field[i],get_pos(i),15,2)
         for i in range(56,72):
             pygame.draw.circle(screen,self.field[i],get_pos(i),25,4)
+    def cleaner(self):
+        for i in range(len(self.field)):
+            if self.field[i] != black:
+                m = 0
+                for j in pieces:
+                    if j.pos == i:
+                        m = 1
+                        break
+                if m == 0:
+                    self.field[i] = black
 #//////////////////////////////////////
 size = width, height = 1000, 570
 screen = pygame.display.set_mode(size)
@@ -279,6 +314,7 @@ loop = True
 font = pygame.font.Font("calibri.ttf",60)
 num_of_players = 0
 dice = 0
+is_six = False
 pieces = []
 while loop:
     for event in pygame.event.get():
@@ -286,47 +322,53 @@ while loop:
             loop = False
             pygame.quit()
     screen.fill([255,0,255])
-    font = pygame.font.Font("calibri.ttf",60)
     txt1 = font.render("Number of players:",True,[0,0,0])
     txt2 = font.render("2",True,[0,0,0])
     txt3 = font.render("3",True,[0,0,0])
     txt4 = font.render("4",True,[0,0,0])
-    screen.blit(txt1,[300,150])
+    screen.blit(txt1,[280,150])
     screen.blit(txt2,[300,250])
     screen.blit(txt3,[500,250])
     screen.blit(txt4,[700,250])
     if pygame.mouse.get_pressed() == (1,0,0):
         x,y = pygame.mouse.get_pos()
-        if (y < 270 and y > 230 and x > 260 and x < 340):
+        if (y < 300 and y > 230 and x > 260 and x < 340):
             num_of_players = 2
             loop = False
-        if (y < 270 and y > 230 and x > 460 and x < 540):
+        if (y < 300 and y > 230 and x > 460 and x < 540):
             num_of_players = 3
             loop = False
-        if (y < 290 and y > 210 and x > 660 and x < 740):
+        if (y < 300 and y > 230 and x > 660 and x < 740):
             num_of_players = 4
             loop = False
     pygame.display.flip()
 #//////////////////////////////////////
 for i in range(4):
     img = pygame.image.load("red.png")
-    img = pygame.transform.scale(img,(25,25))
+    img = pygame.transform.scale(img,(50,50))
     pieces.append(Piece(red,56+i,img))
 for i in range(4):
     img = pygame.image.load("green.png")
-    img = pygame.transform.scale(img,(25,25))
+    img = pygame.transform.scale(img,(50,50))
     pieces.append(Piece(green,64+i,img))
+tern = [red,green]
 if num_of_players > 2:
     for i in range(4):
         img = pygame.image.load("blue.png")
-        img = pygame.transform.scale(img,(25,25))
-        pieces.append(Piece(green,68+i,img))
+        img = pygame.transform.scale(img,(50,50))
+        pieces.append(Piece(blue,68+i,img))
+    tern.append(blue)
 if num_of_players > 3:
     for i in range(4):
         img = pygame.image.load("yellow.png")
-        img = pygame.transform.scale(img,(25,25))
-        pieces.append(Piece(green,60+i,img))
+        img = pygame.transform.scale(img,(50,50))
+        pieces.append(Piece(yellow,60+i,img))
+    tern.append(yellow)
 myfield = Field()
+dice_button = pygame.image.load("diceButton.png")
+dice_button = pygame.transform.scale(dice_button,(200,(200/6)))
+no_move = pygame.image.load("nomove.png")
+no_move = pygame.transform.scale(no_move,(100,130))
 #//////////////////////////////////////
 def gameover():
     if myfield.field[40] == red and myfield.field[41] == red and myfield.field[42] == red and myfield.field[43] == red:
@@ -363,6 +405,76 @@ def gameover():
         return True
     return False
 #//////////////////////////////////////
-
+def screen_display():
+    screen.fill(white)
+    # khoshgel kari ha !
+    #
+    pygame.draw.circle(screen,[215,0,0],get_pos(0),25,25)
+    pygame.draw.circle(screen,[255,192,0],get_pos(10),25,25)
+    pygame.draw.circle(screen,green,get_pos(20),25,25)
+    pygame.draw.circle(screen,blue,get_pos(30),25,25)
+    pygame.draw.circle(screen,[255,20,20],get_pos(39),25,25)
+    pygame.draw.circle(screen,yellow,get_pos(9),25,25)
+    pygame.draw.circle(screen,[0,255,0],get_pos(19),25,25)
+    pygame.draw.circle(screen,[0,102,255],get_pos(29),25,25)
+    red_arrow = pygame.image.load("redarrow.png")
+    red_arrow = pygame.transform.scale(red_arrow,(50,70))
+    green_arrow = pygame.image.load("greenarrow.png")
+    green_arrow = pygame.transform.scale(green_arrow,(70,75))
+    blue_arrow = pygame.image.load("bluearrow.png")
+    blue_arrow = pygame.transform.scale(blue_arrow,(70,40))
+    yellow_arrow = pygame.image.load("yellowarrow.png")
+    yellow_arrow = pygame.transform.scale(yellow_arrow,(70,40))
+    screen.blit(red_arrow,[150,500])
+    screen.blit(green_arrow,[350,20])
+    screen.blit(blue_arrow,[490,370])
+    screen.blit(yellow_arrow,[10,170])
+    #
+    myfield.display()
+    for i in pieces:
+        pos = get_pos(i.pos)
+        pos[0] -= 25
+        pos[1] -= 25
+        screen.blit(i.pic,pos)
+    txt = pygame.font.Font("calibri.ttf",35)
+    turntxt = txt.render("Turn:",True,black)
+    screen.blit(turntxt,[700,50])
+    pygame.draw.rect(screen,tern[0],[800,50,70,40])
+    screen.blit(dice_button,[700,150])
+    screen.blit(no_move,[750,450])
+    if dice != 0:
+        name = str(dice) + ".png"       #It's the best way ! :D
+        dice_pic = pygame.image.load(name)
+        dice_pic = pygame.transform.scale(dice_pic,(70,70))
+        screen.blit(dice_pic,[765,350])
+    pygame.display.flip()
+#//////////////////////////////////////
+game_quit = False
+while (not gameover()) and (not game_quit):
+    screen_display()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_quit = True
+    if pygame.mouse.get_pressed() == (1,0,0):
+        x,y = pygame.mouse.get_pos()
+        if x > 700 and x < 900 and y > 150 and y < 235 and dice == 0:
+            dice = random.randint(1,6)
+            if dice == 6:
+                is_six = True
+            else:
+                is_six = False
+        for i in pieces:
+            piece_pos = get_pos(i.pos)
+            if x > (piece_pos[0] - 25) and x < (piece_pos[0] + 25) and y > (piece_pos[1] - 25) and y < (piece_pos[1] + 25) and tern[0] == i.color and dice != 0:
+                i.moving(dice)
+                if is_six == False and dice == 0:
+                    temp = tern[0]
+                    tern.pop(0)
+                    tern.append(temp)
+        if x > 750 and x < 850 and y > 450 and y < 580 and dice != 0:
+            dice = 0
+            temp = tern[0]
+            tern.pop(0)
+            tern.append(temp)
 #//////////////////////////////////////
 pygame.quit()
