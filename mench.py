@@ -1,18 +1,23 @@
+#############################################
+#                                           #
+#                    Mench                  #
+#          created by Masoud Barati         #
+#############################################
 import pygame
 import random
 import math
 
-pygame.init()
+pygame.init()                #importing imortant madules
 
-class Piece:
+class Piece:                         #pieces class
     def __init__(self,color1,pos1,pic1):
         self.color = color1
         self.pos = pos1
         self.pic = pic1
-    def moving(self,n):
-        global dice
-        former_pos = self.pos
-        if self.color == red:
+    def moving(self,n):                           #the most confusing function in this game!
+        global dice                               #it get the dice number and make selected pieces to move
+        former_pos = self.pos                     #pieces are separating by their color
+        if self.color == red:                   #red color move
             if self.pos > 55 and self.pos < 60 and dice == 6:
                 if myfield.field[0] != red:
                     self.pos = 0
@@ -22,12 +27,12 @@ class Piece:
                 self.pos += n
                 dice = 0
                 myfield.field[self.pos] = red
-        if self.color == yellow:
+        if self.color == yellow:                 #yellow color move
             if self.pos > 59 and self.pos < 64:
                 if dice == 6 and myfield.field[10] != yellow:
                     self.pos = 10
                     dice = 0
-                    myfield.field[10] = yellow
+                    myfield.field[10] = yellow              #these are algorithms for moving from end of field list to start point of it
             elif self.pos + n > 39:
                 testdice = (dice - (39-self.pos)) - 1
                 if myfield.field[testdice] != yellow:
@@ -45,13 +50,13 @@ class Piece:
                     self.pos += n
                     dice = 0
                     myfield.field[self.pos] = yellow
-        if self.color == green:
+        if self.color == green:                #green pieces move
             if self.pos > 63 and self.pos < 68:
                 if dice == 6 and myfield.field[20] != green:
                     self.pos = 20
                     dice = 0
                     myfield.field[20] = green
-            elif self.pos + n > 39:
+            elif self.pos + n > 39:                     #these are algorithms for moving from end of field list to start point of it
                 testdice = (dice - (39-self.pos)) - 1
                 if myfield.field[testdice] != green:
                     self.pos = testdice
@@ -68,13 +73,13 @@ class Piece:
                     self.pos += n
                     dice = 0
                     myfield.field[self.pos] = green
-        if self.color == blue:
+        if self.color == blue:        #blue pieces move
             if self.pos > 67:
                 if dice == 6 and myfield.field[30] != blue:
                     self.pos = 30
                     dice = 0
                     myfield.field[30] = blue
-            elif self.pos + n > 39:
+            elif self.pos + n > 39:                  #these are algorithms for moving from end of field list to start point of it
                 testdice = (dice - (39-self.pos)) - 1
                 if myfield.field[testdice] != blue:
                     self.pos = testdice
@@ -92,14 +97,13 @@ class Piece:
                     dice = 0
                     myfield.field[self.pos] = blue
         if former_pos != self.pos:
-            myfield.field[former_pos] = black
-        #hitting
-        for i in range(len(pieces)):
+            myfield.field[former_pos] = black                          
+        for i in range(len(pieces)):                      #hitting other pieces are checking in this loop
             if self.pos == pieces[i].pos and self.color != pieces[i].color:
                 hit(i)
 #//////////////////////////////////////
-def hit(hitted_num):
-    if pieces[hitted_num].color == red:
+def hit(hitted_num):                        #this function will hit a piece         
+    if pieces[hitted_num].color == red:     #it means that the mentioned piece will sent to the its color repository
         for i in range(56,60):
             if myfield.field[i] == black:
                 pieces[hitted_num].pos = i
@@ -127,11 +131,11 @@ def hit(hitted_num):
 white = [255,255,255]
 black = [0,0,0]
 red = [225,0,0]
-green = [0,147,0]
+green = [0,147,0]                  #defining colors !!
 yellow = [255,255,0]
 blue = [0,0,255]
 #//////////////////////////////////////
-def get_pos(num):
+def get_pos(num):                 #this function locate the pieces and field steps
     if num == 0:
         return [235,535]
     elif num == 1:
@@ -277,7 +281,7 @@ def get_pos(num):
     elif num == 71:
         return [480,430]
 #//////////////////////////////////////
-class Field:
+class Field:                                #field class
     def __init__(self):
         self.field = []                   #  0-39 -->main field 
         for i in range(56):               #  40-55 -->players goal
@@ -297,7 +301,7 @@ class Field:
             pygame.draw.circle(screen,self.field[i],get_pos(i),15,2)
         for i in range(56,72):
             pygame.draw.circle(screen,self.field[i],get_pos(i),25,4)
-    def cleaner(self):
+    def cleaner(self):          #it will clean the empty steps of the field
         for i in range(len(self.field)):
             if self.field[i] != black:
                 m = 0
@@ -308,7 +312,7 @@ class Field:
                 if m == 0:
                     self.field[i] = black
 #//////////////////////////////////////
-size = width, height = 1000, 570
+size = width, height = 1000, 570                 #defining base variables
 screen = pygame.display.set_mode(size)
 loop = True
 font = pygame.font.Font("calibri.ttf",60)
@@ -316,7 +320,7 @@ num_of_players = 0
 dice = 0
 is_six = False
 pieces = []
-while loop:
+while loop:                                    #a loop for Understanding the number of players!
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             loop = False
@@ -343,7 +347,7 @@ while loop:
             loop = False
     pygame.display.flip()
 #//////////////////////////////////////
-for i in range(4):
+for i in range(4):                        #declaring pieces
     img = pygame.image.load("red.png")
     img = pygame.transform.scale(img,(50,50))
     pieces.append(Piece(red,56+i,img))
@@ -369,8 +373,11 @@ dice_button = pygame.image.load("diceButton.png")
 dice_button = pygame.transform.scale(dice_button,(200,(200/6)))
 no_move = pygame.image.load("nomove.png")
 no_move = pygame.transform.scale(no_move,(100,130))
+#bgnumber = random.randint(1,3);                           # set back ground image
+bgimage = pygame.image.load("bg2.jpg")
+bgimage = pygame.transform.scale(bgimage,(1000,570))
 #//////////////////////////////////////
-def gameover():
+def gameover():                       #determine the game is over or no
     if myfield.field[40] == red and myfield.field[41] == red and myfield.field[42] == red and myfield.field[43] == red:
         screen.fill(white)
         wfont = pygame.font.Font("calibri.ttf",70)
@@ -406,9 +413,8 @@ def gameover():
     return False
 #//////////////////////////////////////
 def screen_display():
-    screen.fill(white)
-    # khoshgel kari ha !
-    #
+    screen.fill(white)                                          # khoshgel kari ha !
+    screen.blit(bgimage,[0,0])
     pygame.draw.circle(screen,[215,0,0],get_pos(0),25,25)
     pygame.draw.circle(screen,[255,192,0],get_pos(10),25,25)
     pygame.draw.circle(screen,green,get_pos(20),25,25)
@@ -430,28 +436,28 @@ def screen_display():
     screen.blit(blue_arrow,[490,370])
     screen.blit(yellow_arrow,[10,170])
     #
-    myfield.display()
+    myfield.display()                            # field and pieces displaying
     for i in pieces:
         pos = get_pos(i.pos)
         pos[0] -= 25
         pos[1] -= 25
         screen.blit(i.pic,pos)
     txt = pygame.font.Font("calibri.ttf",35)
-    turntxt = txt.render("Turn:",True,black)
+    turntxt = txt.render("Turn:",True,black)     
     screen.blit(turntxt,[700,50])
     pygame.draw.rect(screen,tern[0],[800,50,70,40])
     screen.blit(dice_button,[700,150])
     screen.blit(no_move,[750,450])
     if dice != 0:
-        name = str(dice) + ".png"       #It's the best way ! :D
+        name = str(dice) + ".png"              #It's the best way ! :D
         dice_pic = pygame.image.load(name)
         dice_pic = pygame.transform.scale(dice_pic,(70,70))
         screen.blit(dice_pic,[765,350])
     pygame.display.flip()
 #//////////////////////////////////////
-game_quit = False
-while (not gameover()) and (not game_quit):
-    screen_display()
+game_quit = False                   
+while (not gameover()) and (not game_quit):                 # main loop
+    screen_display()                                        # it check the position of the mouse and deciding which work should do
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_quit = True
@@ -477,4 +483,6 @@ while (not gameover()) and (not game_quit):
             tern.pop(0)
             tern.append(temp)
 #//////////////////////////////////////
-pygame.quit()
+pygame.quit()   # quit the game
+                                                   #created by Masoud Barati
+                                                            #the END
